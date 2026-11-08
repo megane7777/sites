@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <title>My Links</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="My Links トップ">My Links</a>
+    <div class="header-actions">
+      <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="リンクを検索..." autocomplete="off"></label>
+      <button class="primary" id="addBtn">＋ 追加</button>
+      <button class="icon-btn" id="settingsBtn" aria-label="設定" title="設定">⚙</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="favoritesSection" class="section">
+      <div class="section-heading"><h2>お気に入り</h2><span class="muted" id="favoriteCount"></span></div>
+      <div id="favoritesGrid" class="card-grid"></div>
+      <p id="emptyFavorites" class="empty-hint">お気に入りにしたリンクがここに表示されます。</p>
+    </section>
+    <section class="section">
+      <div class="section-heading"><h2 id="listHeading">すべてのリンク</h2><span class="muted" id="linkCount"></span></div>
+      <div id="categoryNav" class="category-nav"></div>
+      <div id="linksGrid" class="card-grid"></div>
+      <p id="emptyLinks" class="empty-hint">まだリンクがありません。「＋ 追加」から登録できます。</p>
+    </section>
+  </main>
+
+  <dialog id="linkDialog">
+    <form id="linkForm" method="dialog" class="dialog-form">
+      <div class="dialog-head"><h2 id="linkDialogTitle">リンクを追加</h2><button type="button" class="icon-btn close-dialog" aria-label="閉じる">×</button></div>
+      <input type="hidden" id="editId">
+      <label>URL <input id="urlInput" type="url" placeholder="https://example.com" required></label>
+      <div class="inline-field"><label class="grow">タイトル <input id="titleInput" type="text" placeholder="サイト名" required></label><button type="button" id="fetchTitleBtn" class="secondary">URLから取得</button></div>
+      <label>画像URL（任意）<input id="imageInput" type="url" placeholder="https://example.com/image.jpg"></label>
+      <label>カテゴリー（複数選択可）<select id="categoryInput" multiple size="4"></select><small>複数選ぶときは Ctrl（Macは⌘）を押しながら選択。</small></label>
+      <label>説明文 <textarea id="descriptionInput" rows="2" placeholder="どんなサイトか"></textarea></label>
+      <label>メモ <textarea id="memoInput" rows="2" placeholder="自分用のメモ"></textarea></label>
+      <div class="dialog-actions"><button type="button" class="secondary close-dialog">キャンセル</button><button type="submit" class="primary">保存</button></div>
+      <p id="fetchMessage" class="muted small"></p>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog">
+    <div class="dialog-form">
+      <div class="dialog-head"><h2>設定</h2><button class="icon-btn close-dialog" aria-label="閉じる">×</button></div>
+      <section class="settings-block"><h3>カテゴリー管理</h3><div class="inline-field"><input id="newCategoryInput" placeholder="新しいカテゴリー名"><button id="addCategoryBtn" class="secondary">追加</button></div><div id="categoryManager"></div></section>
+      <section class="settings-block"><h3>表示設定</h3>
+        <label>文字の大きさ <select id="fontSetting"><option value="small">小</option><option value="medium">中</option><option value="large">大</option></select></label>
+        <label>カードの大きさ <select id="cardSetting"><option value="small">小</option><option value="medium">中</option><option value="large">大</option></select></label>
+        <label>背景色 <input id="bgSetting" type="color" value="#111318"></label>
+        <label>カード色 <input id="cardColorSetting" type="color" value="#20232b"></label>
+      </section>
+      <section class="settings-block"><h3>バックアップ</h3><p class="muted small">リンク・カテゴリー・表示設定をJSONファイルに保存します。</p>
+        <div class="button-row"><button id="exportBtn" class="secondary">JSONをダウンロード</button><button id="importBtn" class="secondary">JSONを復元</button><input id="importFile" type="file" accept=".json,application/json" hidden></div>
+        <p id="backupMessage" class="muted small"></p>
+      </section>
+      <section class="settings-block"><h3>使い方</h3><ul class="help-list"><li>「＋ 追加」からURLとタイトルを登録します。</li><li>カードをクリックするとリンク先が新しいタブで開きます。</li><li>☆でお気に入り登録、⋯から編集・削除ができます。</li><li>カードをドラッグすると並び順を変更できます。</li><li>端末を移すときはJSONをダウンロードし、移動先で復元してください。</li></ul></section>
+      <p class="warning small">データはこのブラウザ内に保存されます。ブラウザのデータ削除や端末故障に備えて、定期的にJSONバックアップを保管してください。</p>
+    </div>
+  </dialog>
+
+  <dialog id="restoreDialog">
+    <div class="dialog-form">
+      <div class="dialog-head"><h2>バックアップの確認</h2><button class="icon-btn close-dialog" aria-label="閉じる">×</button></div>
+      <p id="restoreSummary"></p>
+      <p class="muted small">復元方法を選んでください。</p>
+      <div class="button-row"><button id="mergeRestoreBtn" class="secondary">現在のデータに追加・統合</button><button id="replaceRestoreBtn" class="danger">全部入れ替える</button></div>
+    </div>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
